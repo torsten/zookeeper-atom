@@ -15,7 +15,7 @@
       (future (doseq [i (range 100)] (Thread/sleep 9) (zk/swap a update-in [:a] inc)))
       (future (doseq [i (range 100)] (Thread/sleep 8) (zk/swap b update-in [:b] inc)))
       (future (doseq [i (range 100)] (Thread/sleep 7) (zk/swap c update-in [:c] inc)))
-      (Thread/sleep 1500)
+      (Thread/sleep 2500)
       @a => {:a 100, :b 100, :c 100}
       @b => {:a 100, :b 100, :c 100}
       @c => {:a 100, :b 100, :c 100})))
