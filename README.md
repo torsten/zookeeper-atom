@@ -1,6 +1,6 @@
 
 
-# Zookeeper Atom
+# Zookeeper Atom [![Build Status](https://travis-ci.org/torsten/zookeeper-atom.svg)](https://travis-ci.org/torsten/zookeeper-atom)
 
 Looks and behaves like a [Clojure atom](http://clojure.org/atoms) but works distributed across many machines by storing it's data as EDN in a [Zookeeper](http://zookeeper.apache.org/) node.
 
