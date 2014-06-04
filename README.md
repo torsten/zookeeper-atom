@@ -11,6 +11,27 @@ Looks and behaves like a [Clojure atom](http://clojure.org/atoms) but works dist
  - Values are encoded as EDN.
 
 
+## Releases and Dependency Information
+
+zookeeper-atom is released via [Clojars](https://clojars.org/zookeeper-atom). The Latest stable release is 0.1.0
+
+[Leiningen](https://github.com/technomancy/leiningen) dependency information:
+
+```clojure
+[zookeeper-atom "0.1.0"]
+```
+
+Maven dependency information:
+
+```xml
+<dependency>
+  <groupId>zookeeper-atom</groupId>
+  <artifactId>zookeeper-atom</artifactId>
+  <version>0.1.0</version>
+</dependency>
+```
+
+
 ## Usage
 
 This example requires that you have Zookeeper installed and running:

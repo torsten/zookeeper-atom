@@ -1,5 +1,5 @@
 .DS_Store
 .lein-*
 .nrepl-port
-pom.xml
+pom.xml*
 target
