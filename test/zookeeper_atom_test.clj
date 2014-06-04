@@ -11,11 +11,11 @@
           c (zk/atom cl "/atom")
           inc (fnil inc 0)]
       (zk/reset a {})
-      (Thread/sleep 100)
+      (Thread/sleep 500)
       (future (doseq [i (range 100)] (Thread/sleep 9) (zk/swap a update-in [:a] inc)))
       (future (doseq [i (range 100)] (Thread/sleep 8) (zk/swap b update-in [:b] inc)))
       (future (doseq [i (range 100)] (Thread/sleep 7) (zk/swap c update-in [:c] inc)))
-      (Thread/sleep 2500)
+      (Thread/sleep 4000)
       @a => {:a 100, :b 100, :c 100}
       @b => {:a 100, :b 100, :c 100}
       @c => {:a 100, :b 100, :c 100})))
