@@ -28,18 +28,24 @@
       (Thread/sleep 4000)
       @a => {:a limit, :b limit, :c limit}
       @b => {:a limit, :b limit, :c limit}
-      @c => {:a limit, :b limit, :c limit})))
+      @c => {:a limit, :b limit, :c limit}))
+  (fact "(heuristic) existing value can be read immediately"
+    (let [client (zk/connect "127.0.0.1")
+          path (str "/" *ns* "/read-immediately-" (rand-str 20))
+          _ (zk/atom client path "Are we there, yet?")]
+      (doseq [_ (range 100)]
+        @(zk/atom client path) => "Are we there, yet?"))))
 
 (facts "about atom function"
   (fact "sets an initial value"
     (let [client (zk/connect "127.0.0.1")
-          path (str "/" *ns* "/" (rand-str 20))
+          path (str "/" *ns* "/initial-" (rand-str 20))
           a (zk/atom client path "initial")]
       (Thread/sleep 50)
       @a => "initial"))
   (fact "initial value does not overwrite an existing value"
     (let [client (zk/connect "127.0.0.1")
-          path (str "/" *ns* "/" (rand-str 20))
+          path (str "/" *ns* "/overwrite-" (rand-str 20))
           first (zk/atom client path "init")]
       (fact "'init' value is readable"
         (Thread/sleep 200)
