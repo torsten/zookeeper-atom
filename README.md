@@ -52,6 +52,24 @@ This example requires that you have Zookeeper installed and running:
 ;; => {}
 ```
 
+Alternatively to the code above, a zookeeper-atom can be initialized:
+
+```clojure
+(def b-atom (zk/atom client "/some/path" [1 2 3]))
+
+@b-atom
+;; => [1 2 3]
+```
+
+However, if there already exists a node at the given path, it's value will not be overwritten:
+
+```clojure
+(def c-atom (zk/atom client "/some/path" "WAT?!"))
+
+@c-atom
+;; => [1 2 3]
+```
+
 
 ## Contributing
 

@@ -53,25 +53,39 @@
 
 (def connect zoo/connect)
 
+(defn- set-value
+  [client path value version retry]
+  (let [bytes (encode value)]
+    (try
+      (do
+        (debug path version "=>" value)
+        (let [response (zoo/set-data client path bytes version)]
+          (debug "ZK said" response)
+          value))
+      (catch KeeperException ex
+        (if (= (.code ex) org.apache.zookeeper.KeeperException$Code/BADVERSION)
+          (do
+            (debug "caught bad-version")
+            (when retry
+              (retry)))
+          (throw ex))))))
+
+(defn- init
+  [^Atom atom value]
+  (let [{:keys [client path]} atom
+        version 0]
+    (set-value client path value version nil))
+    atom)
+
 (defn swap
   [^Atom atom f & args]
   (let [{:keys [client path cache]} atom
         {:keys [data version]} @cache
         swap-args (concat [data] args)
-        swapped (apply f swap-args)
-        bytes (encode swapped)]
-    (try
-      (do
-        (debug path version "=>" swapped)
-        (let [response (zoo/set-data client path bytes version)]
-          (debug "ZK said" response)
-          swapped))
-      (catch KeeperException ex
-        (if (= (.code ex) org.apache.zookeeper.KeeperException$Code/BADVERSION)
-          (do
-            (debug "BADVERSION will retry")
-            (apply swap (concat [atom f] args)))
-          (throw ex))))))
+        swapped (apply f swap-args)]
+    (set-value client path swapped version #(do
+      (debug "will retry")
+      (apply swap (concat [atom f] args))))))
 
 (defn reset
   [^Atom atom value]
@@ -91,10 +105,12 @@
       nil)))
 
 (defn atom
-  [client path]
-  (doseq [node (all-prefixes path)]
-    (zoo/create client node :persistent? true))
-  (let [cache (clj-atom {})
-        this (Atom. cache client path)]
-    ((znode-data-watcher this) nil)
-    this))
+  ([client ^String path]
+    (doseq [node (all-prefixes path)]
+      (zoo/create client node :persistent? true))
+    (let [cache (clj-atom {})
+          this (Atom. cache client path)]
+      ((znode-data-watcher this) nil)
+      this))
+  ([client ^String path initial-value]
+    (-> (atom client path) (init initial-value))))
