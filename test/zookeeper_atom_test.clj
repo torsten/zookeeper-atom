@@ -5,17 +5,19 @@
 
 (facts "about race conditions"
   (fact "(heuristic) has correct value after 100 swaps"
-    (let [cl (zk/connect "127.0.0.1")
-          a (zk/atom cl "/atom")
-          b (zk/atom cl "/atom")
-          c (zk/atom cl "/atom")
-          inc (fnil inc 0)]
+    (let [client (zk/connect "127.0.0.1")
+          path (str "/" *ns* "/swap-100")
+          a (zk/atom client path)
+          b (zk/atom client path)
+          c (zk/atom client path)
+          inc (fnil inc 0)
+          limit 100]
       (zk/reset a {})
       (Thread/sleep 500)
-      (future (doseq [i (range 100)] (Thread/sleep 9) (zk/swap a update-in [:a] inc)))
-      (future (doseq [i (range 100)] (Thread/sleep 8) (zk/swap b update-in [:b] inc)))
-      (future (doseq [i (range 100)] (Thread/sleep 7) (zk/swap c update-in [:c] inc)))
+      (future (doseq [_ (range limit)] (Thread/sleep 9) (zk/swap a update-in [:a] inc)))
+      (future (doseq [_ (range limit)] (Thread/sleep 8) (zk/swap b update-in [:b] inc)))
+      (future (doseq [_ (range limit)] (Thread/sleep 7) (zk/swap c update-in [:c] inc)))
       (Thread/sleep 4000)
-      @a => {:a 100, :b 100, :c 100}
-      @b => {:a 100, :b 100, :c 100}
-      @c => {:a 100, :b 100, :c 100})))
+      @a => {:a limit, :b limit, :c limit}
+      @b => {:a limit, :b limit, :c limit}
+      @c => {:a limit, :b limit, :c limit})))
