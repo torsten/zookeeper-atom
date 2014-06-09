@@ -10,7 +10,8 @@
   (:refer-clojure :rename {atom clj-atom})
   (require [zookeeper :as zoo]
            [zookeeper.data :as zoo.data]
-           [clojure.tools.logging :refer [debug]])
+           [clojure.tools.logging :refer [debug]]
+           [clojure.edn :as edn])
   (import org.apache.zookeeper.KeeperException))
 
 (defn- encode
@@ -23,7 +24,7 @@
   "Decode bytes back into a Clojure data structure."
   [bytes]
   (when bytes
-    (read-string (zoo.data/to-string bytes))))
+    (edn/read-string (zoo.data/to-string bytes))))
 
 (defn- all-prefixes
   "Generate all prefixes for a given path, for example:
