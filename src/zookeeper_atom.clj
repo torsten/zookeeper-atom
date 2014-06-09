@@ -92,11 +92,10 @@
   [^Atom atom f & args]
   (let [{:keys [client path cache]} atom
         {:keys [data version]} @cache
-        swap-args (concat [data] args)
-        swapped (apply f swap-args)]
+        swapped (apply f data args)]
     (set-value client path swapped version #(do
       (debug "will retry")
-      (apply swap (concat [atom f] args))))))
+      (apply swap atom f args)))))
 
 (defn reset
   "Reset a zookeeper-atom's value without regard for the value."
