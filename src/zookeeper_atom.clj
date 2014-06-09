@@ -61,8 +61,8 @@
 
 (defn- set-value
   "Set new data for zookeeper path by storing the encoded `value`,
-   Optionally calls `retry` if the remote version does not match `version`."
-  [client path value version retry]
+   Optionally calls `retry-fn` if the remote version does not match `version`."
+  [client path value version retry-fn]
   (let [bytes (encode value)]
     (try
       (do
@@ -74,8 +74,10 @@
         (if (= (.code ex) KeeperException$Code/BADVERSION)
           (do
             (debug "caught bad-version")
-            (when retry
-              (retry)))
+            (when retry-fn
+              (do
+                (debug "will retry")
+                (retry-fn))))
           (throw ex))))))
 
 (defn- init
@@ -94,9 +96,7 @@
   (let [{:keys [client path cache]} atom
         {:keys [data version]} @cache
         swapped (apply f data args)]
-    (set-value client path swapped version #(do
-      (debug "will retry")
-      (apply swap atom f args)))))
+    (set-value client path swapped version #(apply swap atom f args))))
 
 (defn reset
   "Reset a zookeeper-atom's value without regard for the value."
