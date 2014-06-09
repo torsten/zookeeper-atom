@@ -37,7 +37,7 @@ Maven dependency information:
 This example requires that you have Zookeeper installed and running:
 
 ```clojure
-(require '[zookeeper-atom :as zk])
+(require '[zookeeper-atom.core :as zk])
 
 (def client (zk/connect "127.0.0.1"))
 (def a-atom (zk/atom client "/some/znode/path"))
@@ -79,7 +79,7 @@ Here is a little snippet to get you started in your REPL in case you want to ext
 
 ```clojure
 (use 'clj-logging-config.log4j 'midje.repl)
-(set-loggers! :root {:level :warn} "zookeeper-atom" {:level :debug})
+(set-loggers! :root {:level :warn} "zookeeper-atom.core" {:level :debug})
 (autotest)
 ; hack!
 ```

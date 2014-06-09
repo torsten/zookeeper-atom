@@ -6,7 +6,7 @@
 ;; agreeing to be bound by the terms of this license.
 ;; You must not remove this notice, or any other, from this software.
 
-(ns zookeeper-atom
+(ns zookeeper-atom.core
   (:refer-clojure :rename {atom clj-atom})
   (require [zookeeper :as zoo]
            [zookeeper.data :as zoo.data]

@@ -7,7 +7,7 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [zookeeper-clj "0.9.1"]
                  [org.clojure/tools.logging "0.2.6"]]
-  :main zookeeper-atom
+  :main zookeeper-atom.core
   :aliases {"test" ["midje"]
             "all" ["with-profile" "dev,1.6:dev,1.5"]}
   :profiles {:1.5 {:dependencies [[org.clojure/clojure "1.5.1"]]}

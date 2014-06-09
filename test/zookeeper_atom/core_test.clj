@@ -1,10 +1,10 @@
-(ns zookeeper-atom-test
+(ns zookeeper-atom.core-test
   (require [midje.sweet :refer :all]
-           [zookeeper-atom :as zk]
+           [zookeeper-atom.core :as zk]
            [zookeeper :as zoo]))
 
 ; (use 'clj-logging-config.log4j)
-; (set-loggers! :root {:level :warn} "zookeeper-atom" {:level :debug})
+; (set-loggers! :root {:level :warn} "zookeeper-atom.core" {:level :debug})
 
 (defn- rand-str
   [len]
