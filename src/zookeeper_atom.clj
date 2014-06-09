@@ -12,7 +12,7 @@
            [zookeeper.data :as zoo.data]
            [clojure.tools.logging :refer [debug]]
            [clojure.edn :as edn])
-  (import org.apache.zookeeper.KeeperException))
+  (import (org.apache.zookeeper KeeperException KeeperException$Code)))
 
 (defn- encode
   "Encode Clojure a data structure into bytes."
@@ -71,7 +71,7 @@
           (debug "ZK said" response)
           value))
       (catch KeeperException ex
-        (if (= (.code ex) org.apache.zookeeper.KeeperException$Code/BADVERSION)
+        (if (= (.code ex) KeeperException$Code/BADVERSION)
           (do
             (debug "caught bad-version")
             (when retry
