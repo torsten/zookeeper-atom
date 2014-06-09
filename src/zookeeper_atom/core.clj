@@ -11,7 +11,8 @@
   (require [zookeeper :as zoo]
            [zookeeper.data :as zoo.data]
            [clojure.tools.logging :refer [debug]]
-           [clojure.edn :as edn])
+           [clojure.edn :as edn]
+           [clojure.string :as string])
   (import (org.apache.zookeeper KeeperException KeeperException$Code)))
 
 (defn- encode
@@ -29,24 +30,16 @@
 (defn- all-prefixes
   "Generate all prefixes for a given path, for example:
    (all-prefixes /123/asd/bbbb) => [/123, /123/asd, /123/asd/bbbb]"
-  [^java.lang.String path]
-  (letfn [(find-prefixes [path]
-            (reduce
-              (fn [[accu last-prefix] i]
-                (let [prefix (str last-prefix "/" i)]
-                  [(conj accu prefix) prefix]))
-              [[] ""]
-              path))]
-    (when (.startsWith path "/")
-      (-> path
-        (.substring 1)
-        (.split "/")
-        find-prefixes
-        first))))
+  [^String path]
+  (when (.startsWith path "/")
+    (->> path
+      (iterate #(string/replace % #"/[^/]*$" ""))
+      (take-while seq)
+      reverse)))
 
 (defrecord Atom [cache client path]
   clojure.lang.IDeref
-    (deref [this] 
+    (deref [this]
       (-> this :cache deref :data)))
 
 ; Somehow we have to overwrite this or Clojure fails with
