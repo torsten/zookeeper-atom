@@ -101,7 +101,7 @@
 (defn reset
   "Reset a zookeeper-atom's value without regard for the value."
   [^Atom atom value]
-  (swap atom (fn [_] value)))
+  (swap atom (constantly value)))
 
 (defn- znode-data-watcher
   "Returns a function that continuously watches a zookeeper-atom's value
