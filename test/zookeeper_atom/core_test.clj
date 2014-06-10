@@ -11,10 +11,14 @@
   (let [letters (range (int \A) (inc (int \Z)))]
     (apply str (repeatedly len #(-> letters rand-nth char)))))
 
+(defn- rand-path
+  [tag]
+  (str "/" *ns* "/" tag "-" (rand-str 50)))
+
 (facts "about race conditions"
   (fact "(heuristic) has correct value after 100 swaps"
     (let [client (zk/connect "127.0.0.1")
-          path (str "/" *ns* "/swap-100")
+          path (rand-path "swap-100")
           a (zk/atom client path)
           b (zk/atom client path)
           c (zk/atom client path)
@@ -31,7 +35,7 @@
       @c => {:a limit, :b limit, :c limit}))
   (fact "(heuristic) existing value can be read immediately"
     (let [client (zk/connect "127.0.0.1")
-          path (str "/" *ns* "/read-immediately-" (rand-str 20))
+          path (rand-path "read-immediately")
           _ (zk/atom client path "Are we there, yet?")]
       (doseq [_ (range 100)]
         @(zk/atom client path) => "Are we there, yet?"))))
@@ -39,13 +43,13 @@
 (facts "about atom function"
   (fact "sets an initial value"
     (let [client (zk/connect "127.0.0.1")
-          path (str "/" *ns* "/initial-" (rand-str 20))
+          path (rand-path "initial")
           a (zk/atom client path "initial")]
       (Thread/sleep 50)
       @a => "initial"))
   (fact "initial value does not overwrite an existing value"
     (let [client (zk/connect "127.0.0.1")
-          path (str "/" *ns* "/overwrite-" (rand-str 20))
+          path (rand-path "overwrite")
           first (zk/atom client path "init")]
       (fact "'init' value is readable"
         (Thread/sleep 200)
