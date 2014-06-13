@@ -1,4 +1,4 @@
-(defproject zookeeper-atom "0.2.0"
+(defproject zookeeper-atom "0.2.1-SNAPSHOT"
   :description "Provides a reference type that looks and behaves like a Clojure atom but uses Zookeeper to store and synchronize distributed access to it's value."
   :url "https://github.com/torsten/zookeeper-atom"
   :min-lein-version "2.3.0"

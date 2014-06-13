@@ -22,17 +22,27 @@
           a (zk/atom client path)
           b (zk/atom client path)
           c (zk/atom client path)
+          d (zk/atom client path)
+          e (zk/atom client path)
           inc (fnil inc 0)
-          limit 100]
+          limit 500
+          swapper #(doseq [_ (range limit)]
+                    (Thread/sleep %1)
+                    (zk/swap %2 update-in [%3] inc))]
       (zk/reset a {})
       (Thread/sleep 500)
-      (future (doseq [_ (range limit)] (Thread/sleep 9) (zk/swap a update-in [:a] inc)))
-      (future (doseq [_ (range limit)] (Thread/sleep 8) (zk/swap b update-in [:b] inc)))
-      (future (doseq [_ (range limit)] (Thread/sleep 7) (zk/swap c update-in [:c] inc)))
-      (Thread/sleep 4000)
-      @a => {:a limit, :b limit, :c limit}
-      @b => {:a limit, :b limit, :c limit}
-      @c => {:a limit, :b limit, :c limit}))
+      (let [futures [(future (swapper 5 a :a))
+                     (future (swapper 4 b :b))
+                     (future (swapper 3 c :c))
+                     (future (swapper 2 c :d))
+                     (future (swapper 1 c :e))]]
+        (doseq [fu futures] (deref fu)))
+      (Thread/sleep 500)
+      @a => {:a limit, :b limit, :c limit, :d limit, :e limit}
+      @b => {:a limit, :b limit, :c limit, :d limit, :e limit}
+      @c => {:a limit, :b limit, :c limit, :d limit, :e limit}
+      @d => {:a limit, :b limit, :c limit, :d limit, :e limit}
+      @e => {:a limit, :b limit, :c limit, :d limit, :e limit}))
   (fact "(heuristic) existing value can be read immediately"
     (let [client (zk/connect "127.0.0.1")
           path (rand-path "read-immediately")
