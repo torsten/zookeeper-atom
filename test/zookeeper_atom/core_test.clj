@@ -74,3 +74,10 @@
           (Thread/sleep 50)
           @first => "reset"
           @second => "reset")))))
+
+(facts "about swap"
+  (fact "refuses to encode pattern literals"
+    (let [client (zk/connect "127.0.0.1")
+          path (rand-path "patterns")
+          a (zk/atom client path)]
+      (zk/reset a #"foo") => (throws #"Can't encode data as EDN"))))

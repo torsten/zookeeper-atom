@@ -15,17 +15,22 @@
            [clojure.string :as string])
   (import (org.apache.zookeeper KeeperException KeeperException$Code)))
 
-(defn- encode
-  "Encode Clojure a data structure into bytes."
-  [data]
-  (when data
-    (zoo.data/to-bytes (pr-str data))))
-
 (defn- decode
   "Decode bytes back into a Clojure data structure."
   [bytes]
   (when bytes
     (edn/read-string (zoo.data/to-string bytes))))
+
+(defn- encode
+  "Encode Clojure a data structure into bytes."
+  [data]
+  (when data
+    (let [encoded (zoo.data/to-bytes (pr-str data))]
+      (try
+        (decode encoded)
+        encoded
+        (catch Exception e
+          (throw (ex-info "Can't encode data as EDN" {:data data} e)))))))
 
 (defn- all-prefixes
   "Generate all prefixes for a given path, for example:
