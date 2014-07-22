@@ -13,12 +13,12 @@ Looks and behaves like a [Clojure atom](http://clojure.org/atoms) but works dist
 
 ## Releases and Dependency Information
 
-zookeeper-atom is released via [Clojars](https://clojars.org/zookeeper-atom). The Latest stable release is 0.2.0
+zookeeper-atom is released via [Clojars](https://clojars.org/zookeeper-atom). The Latest stable release is 1.0.0
 
 [Leiningen](https://github.com/technomancy/leiningen) dependency information:
 
 ```clojure
-[zookeeper-atom "0.2.0"]
+[zookeeper-atom "1.0.0"]
 ```
 
 Maven dependency information:
@@ -27,7 +27,7 @@ Maven dependency information:
 <dependency>
   <groupId>zookeeper-atom</groupId>
   <artifactId>zookeeper-atom</artifactId>
-  <version>0.2.0</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 

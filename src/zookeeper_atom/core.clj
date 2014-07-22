@@ -102,8 +102,7 @@
   (swap atom (constantly value)))
 
 (defn data-version
-  "Returns the data version of the znode. Mostly useful for debugging.
-   Warning: This function is alpha and subject to change or removal."
+  "Returns the data version of the znode. Mostly useful for debugging."
   [^Atom atom]
   (-> atom :cache deref :version))
 
