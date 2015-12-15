@@ -5,7 +5,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [zookeeper-clj "0.9.1"]
+                 [zookeeper-clj "0.9.3"]
                  [org.clojure/tools.logging "0.2.6"]]
   :main zookeeper-atom.core
   :aliases {"test" ["midje"]
